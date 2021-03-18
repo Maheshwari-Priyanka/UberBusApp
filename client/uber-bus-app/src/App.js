@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
-import LandingPage from './components/Home/LandingPage'
 import SignIn from './components/LoginSignUp/SignIn';
 import SignUp from './components/LoginSignUp/SignUp';
 import Header from './components/Header';
-import BusBooking from './components/AppPages/BusBooking'
+import BusBooking from './components/AppPages/BusBooking';
+import Welcome from './components/Welcome';
+import ViewBookings from './components/AppPages/ViewBookings';
 
 function App() {
   return (
@@ -12,13 +13,11 @@ function App() {
       <Router>
         <Header />
         <Switch>
-          <Route path="/" exact render={props => <LandingPage {...props} />} />
+          <Route path="/" exact render={props => <Welcome {...props} />} />
           <Route path="/signin" render={props => <SignIn {...props} />} />
           <Route path="/signup" render={props => <SignUp {...props} />} />
           <Route path="/booking" render={props => <BusBooking {...props} />} />
-          {/* <Route path="/routes" exact render={props => <RouteSelection {...props} />} />
-          <Route path="/profile" exact render={props => <Profile {...props} />} />
-          <Route path="/getTicket" exact render={props => <TicketPage {...props} />} /> */}
+          <Route path="/viewbookings" render={props => <ViewBookings {...props} />} />
         </Switch>
       </Router>
     </div>

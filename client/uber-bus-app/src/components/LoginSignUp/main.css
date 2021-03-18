@@ -11,6 +11,7 @@
     transform: translate(-50%, -9%);
     width: 100%;
     z-index: 1000;
+    height: 20%;
 }
 
 .header-nav span {
@@ -33,13 +34,12 @@
 }
 
 .form-container {
+    width: 50%;
+    margin-top: 5%;
     text-align: left;
     border: 1px solid;
     border-radius: 15px;
     padding: 10px;
-    box-shadow: 5px 10px #456e976c;
-}
-
-.signup {
-    margin-top: 25%;
+    box-shadow: 5px 10px #89cac2;
+    margin-bottom: 5%;
 }
