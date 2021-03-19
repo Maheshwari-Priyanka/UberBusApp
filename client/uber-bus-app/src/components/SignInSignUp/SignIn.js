@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import './main.css'
+import signin from './UserFunctions';
 
 function validate(email, password) {
     let errors = []
@@ -72,7 +73,33 @@ class SignIn extends Component {
             });
             e.preventDefault();
         } else {
-            this.props.history.push('/booking');
+            e.preventDefault();
+            const user = {
+                email: this.state.email,
+                password: this.state.password
+            }
+
+            signin(user).then(res => {
+                let msg = res["message"];
+                if (msg.includes("not found")) {
+                    this.setState({
+                        emailError: res.message,
+                        passwordError: ''
+                    });
+                } else if (msg.includes("Incorrect email ID")) {
+                    this.setState({
+                        emailError: res.message,
+                        passwordError: ''
+                    });
+                } else if (msg.includes("Incorrect password")) {
+                    this.setState({
+                        emailError: '',
+                        passwordError: res.message
+                    });
+                } else {
+                    this.props.history.push('/booking');
+                }
+            });
         }
     }
 
@@ -86,12 +113,12 @@ class SignIn extends Component {
                             <div class="form-group">
                                 <label>Email-Id</label>
                                 <input className="form-control" value={this.state.email} type="text" name="email" required onChange={e => this.handleEmail(e)} />
-                                <p style={{color: "red"}}> {this.state.emailError} </p>
+                                <p style={{color: "red", fontSize: "10px"}}> {this.state.emailError} </p>
                             </div>
                             <div class="form-group">
                                 <label>Password</label>
                                 <input className="form-control" value={this.state.password} type="password" name="password" required onChange={e => this.handlePassword(e)} />
-                                <p style={{color: "red"}}> {this.state.passwordError} </p>
+                                <p style={{color: "red", fontSize: "10px"}}> {this.state.passwordError} </p>
                             </div>
                             <div class="myform-button">
                                 <button type="submit" className="myform-btn">Sign In</button>
