@@ -1,0 +1,45 @@
+.maint-cnt {
+    height: 100%;
+    width: 100%;
+}
+
+.header-nav {
+    text-align: left;
+    position: absolute;
+    top: 1%;
+    left: 50%;
+    transform: translate(-50%, -9%);
+    width: 100%;
+    z-index: 1000;
+    height: 20%;
+}
+
+.header-nav span {
+    text-transform: uppercase;
+    display: block;
+}
+
+.mytext1 {
+    color: #000;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.425), 0 0 4px rgba(255, 255, 255, 0.425), 0 0 8px rgba(255, 255, 255, 0.425), 0 0 32px rgba(0, 255, 255, 0.425), 0 0 64px rgba(0, 255, 255, 0.425), 0 0 90px rgba(0, 255, 255, 0.425);
+    font-family: 'Piedra', cursive;
+    font-size: 50px;
+    font-weight: 200;
+    letter-spacing: 8px;
+    margin-bottom: 20px;
+    background: #456e976c;
+    border-radius: 5px;
+    position: relative;
+    /* animation: text 3s 1; */
+}
+
+.form-container {
+    width: 50%;
+    margin-top: 5%;
+    text-align: left;
+    border: 1px solid;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 5px 10px #89cac2;
+    margin-bottom: 5%;
+}
