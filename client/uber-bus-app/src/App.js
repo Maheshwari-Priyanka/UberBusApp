@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
-import SignIn from './components/LoginSignUp/SignIn';
-import SignUp from './components/LoginSignUp/SignUp';
+import SignIn from './components/SignInSignUp/SignIn';
+import SignUp from './components/SignInSignUp/SignUp';
 import Header from './components/Header';
 import BusBooking from './components/AppPages/BusBooking';
 import Welcome from './components/Welcome';

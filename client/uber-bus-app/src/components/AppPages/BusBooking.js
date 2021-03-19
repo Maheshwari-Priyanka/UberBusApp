@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
 import './BusSelection.css'
+import getbuses from './BookingFunctions';
 
 function validate(source, destination) {
     let reg = /^[a-zA-Z0-9_.-\s]*$/;
@@ -29,7 +30,9 @@ class BusBooking extends Component {
             sourceError: "",
             destination: "",
             destError: "",
-            date: ""
+            date: "",
+            busError: "",
+            buses: []
         };
 
         this.handleDateChange = this.handleDateChange.bind(this);
@@ -71,6 +74,26 @@ class BusBooking extends Component {
             e.preventDefault();
         } else {
             e.preventDefault();
+            const booking = {
+                source: this.state.source,
+                destination: this.state.destination,
+                date: this.state.date
+            }
+
+            getbuses(booking).then(res => {
+                if (res["message"] != null) {
+                    this.setState({
+                        sourceError: "",
+                        destError: "",
+                        busError: res["message"]
+                    });
+                } else {
+                    console.log(res);
+                    this.setState({
+                        buses: res
+                    });
+                }
+            })
         }
     }
 
@@ -86,18 +109,19 @@ class BusBooking extends Component {
                                 <div class="form-group">
                                     <label>Source</label>
                                     <input className="form-control" type="text" name="source" value={this.state.source} required onChange={(e) => { this.handleSourceChange(e) }} />
-                                    <p style={{ color: "red" }}> {this.state.sourceError} </p>
+                                    <p style={{color: "red", fontSize: "10px"}}> {this.state.sourceError} </p>
                                 </div>
                                 <div class="form-group">
                                     <label>Destination</label>
                                     <input className="form-control" type="text" name="destination" value={this.state.destination} required onChange={(e) => { this.handleDestinationChange(e) }} />
-                                    <p style={{ color: "red" }}> {this.state.destError} </p>
+                                    <p style={{color: "red", fontSize: "10px"}}> {this.state.destError} </p>
                                 </div>
                                 <div class="form-group">
                                     <label>Date of Journey  </label>
                                     {/* <input className="form-control" type="date" name="date" value={this.state.date} required onChange={(e) => {this.handleDateChange(e)}} /> */}
                                     <DatePicker className="custom-select" name="date" value={this.state.date} onChange={this.handleDateChange} selected={this.state.date} minDate={moment().toDate()} />
                                 </div>
+                                <p style={{color: "red", fontSize: "10px"}}> {this.state.busError} </p>
                                 <div class="myform-button">
                                     <button type="submit" className="myform-btn">Next</button>
                                 </div>

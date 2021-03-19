@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import './main.css'
+import { signup } from './UserFunctions'
 
 function validate(firstname, lastname, email, password) {
     let errors = []
@@ -96,8 +97,36 @@ class SignUp extends Component {
             });
             e.preventDefault();
         } else {
-            alert("Signed up successfully!");
-            this.props.history.push('/signin');
+            e.preventDefault();
+            const user = {
+                firstname: this.state.firstname,
+                lastname: this.state.lastname,
+                email: this.state.email,
+                password: this.state.password
+            }
+
+            signup(user).then(res => {
+                console.log(res["message"]);
+                let msg = res["message"];
+                if (msg.includes("already exists")) {
+                    this.setState({
+                        firstError: '',
+                        lastError: '',
+                        emailError: res.message,
+                        passwordError: ''
+                    });
+                } else if (msg.includes("Error")) {
+                    this.setState({
+                        firstError: '',
+                        lastError: '',
+                        emailError: res.message,
+                        passwordError: ''
+                    });
+                } else {
+                    alert("Signed up successfully!");
+                    this.props.history.push('/signin');
+                }
+            });
         }
     }
 
@@ -109,24 +138,24 @@ class SignUp extends Component {
                         <h2 style={{textAlign: "center"}}>Sign Up</h2>
                         <form onSubmit={(e) => { this.submitData(e) }}>
                             <div class="form-group">
-                                <label>First Name</label>
+                                <label>First Name<b style={{color: "red"}}>*</b></label>
                                 <input className="form-control" type="text" name="firstname" required onChange={e => this.handlefname(e)} />
-                                <p style={{color: "red"}}> {this.state.firstError} </p>
+                                <p style={{color: "red", fontSize: "10px"}}> {this.state.firstError} </p>
                             </div>
                             <div class="form-group">
-                                <label>Last Name</label>
+                                <label>Last Name<b style={{color: "red"}}>*</b></label>
                                 <input className="form-control" type="text" name="lastname" required onChange={e => this.handlelname(e)} />
-                                <p style={{color: "red"}}> {this.state.lastError} </p>
+                                <p style={{color: "red", fontSize: "10px"}}> {this.state.lastError} </p>
                             </div>
                             <div class="form-group">
-                                <label>Email-Id</label>
+                                <label>Email Id<b style={{color: "red"}}>*</b></label>
                                 <input className="form-control" type="text" name="email" required onChange={e => this.handleemail(e)} />
-                                <p style={{color: "red"}}> {this.state.emailError} </p>
+                                <p style={{color: "red", fontSize: "10px"}}> {this.state.emailError} </p>
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
+                                <label>Password<b style={{color: "red"}}>*</b></label>
                                 <input className="form-control" type="password" name="password" required onChange={e => this.handlepassword(e)} />
-                                <p style={{color: "red"}}> {this.state.passwordError} </p>
+                                <p style={{color: "red", fontSize: "10px"}}> {this.state.passwordError} </p>
                             </div>
                             <div class="myform-button">
                                 <button type="submit" className="myform-btn">Register</button>
