@@ -38,7 +38,7 @@ python3 uber.py
 
 4. Access react app at http://localhost:3000/
 
-## Steps to run access application using Elastic IP address
+## Steps to access application using Elastic IP address
 
 1. Run terraform file
 
