@@ -37,6 +37,7 @@ class ViewBookings extends Component {
                             <th>Source</th>
                             <th>Destination</th>
                             <th>Bus Name</th>
+                            <th>Date of Journey</th>
                             <th>Time</th>
                             <th></th>
                         </tr>
@@ -45,6 +46,7 @@ class ViewBookings extends Component {
                                 <td>{this.state.bookings[index]["source"]}</td>
                                 <td>{this.state.bookings[index]["destination"]}</td>
                                 <td>{this.state.bookings[index]["bus"]}</td>
+                                <td>{this.state.bookings[index]["date"].substring(0, 10)}</td>
                                 <td>{this.state.bookings[index]["time"]}</td>
                             </tr>
                             // <div className="btn" style={{ textAlign: "left", width: "30%" }}>
