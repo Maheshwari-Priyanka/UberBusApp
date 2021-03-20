@@ -88,7 +88,7 @@ resource "aws_instance" "uberapp" {
     private_key = "${file("${var.path_to_private_key}")}"
   }
   provisioner "file" {
-    source = "${file("${var.path_to_UberBusApp}")}"
+    source = "${var.path_to_UberBusApp}"
     destination = "/home/ubuntu"
   }
 
