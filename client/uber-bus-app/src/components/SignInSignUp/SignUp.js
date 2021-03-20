@@ -52,6 +52,12 @@ class SignUp extends Component {
         this.handlepassword = this.handlepassword.bind(this);
     }
 
+    componentDidMount() {
+        if (localStorage.getItem('userID') !== null) {
+            this.props.history.push('/booking')
+        }
+    }
+
     handlefname = e => {
         let value = e.target.value
         this.setState({
@@ -106,25 +112,21 @@ class SignUp extends Component {
             }
 
             signup(user).then(res => {
-                console.log(res["message"]);
-                let msg = res["message"];
-                if (msg.includes("already exists")) {
-                    this.setState({
-                        firstError: '',
-                        lastError: '',
-                        emailError: res.message,
-                        passwordError: ''
-                    });
-                } else if (msg.includes("Error")) {
-                    this.setState({
-                        firstError: '',
-                        lastError: '',
-                        emailError: res.message,
-                        passwordError: ''
-                    });
+                console.log(res);
+                if (res.status === 200) {
+                    if (res.data["message"].includes("success")) {
+                        alert("Signed up successfully!");
+                        this.props.history.push('/signin');
+                    } else {
+                        this.setState({
+                            firstError: '',
+                            lastError: '',
+                            emailError: res.data["message"],
+                            passwordError: ''
+                        });
+                    }
                 } else {
-                    alert("Signed up successfully!");
-                    this.props.history.push('/signin');
+                    alert("Server Error!");
                 }
             });
         }

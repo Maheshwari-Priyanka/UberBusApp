@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
 import './BusSelection.css'
-import getbuses from './BookingFunctions';
+import { getbuses, addbooking } from './BookingFunctions';
 
 function validate(source, destination) {
     let reg = /^[a-zA-Z0-9_.-\s]*$/;
@@ -31,7 +31,7 @@ class BusBooking extends Component {
             destination: "",
             destError: "",
             date: "",
-            busError: "",
+            busError: "Select source, destination and date of journey",
             buses: []
         };
 
@@ -39,6 +39,7 @@ class BusBooking extends Component {
         this.handleSourceChange = this.handleSourceChange.bind(this);
         this.handleDestinationChange = this.handleDestinationChange.bind(this);
         this.submitData = this.submitData.bind(this);
+        this.selected = this.selected.bind(this);
     }
 
     handleSourceChange(e) {
@@ -81,25 +82,52 @@ class BusBooking extends Component {
             }
 
             getbuses(booking).then(res => {
-                if (res["message"] != null) {
-                    this.setState({
-                        sourceError: "",
-                        destError: "",
-                        busError: res["message"]
-                    });
-                } else {
-                    console.log(res);
-                    this.setState({
-                        buses: res
-                    });
+                if (res.status === 200) {
+                    if (res.data["message"] === "No Buses found") {
+                        this.setState({
+                            sourceError: "",
+                            destError: "",
+                            busError: res.data["message"]
+                        });
+                    } else {
+                        this.setState({
+                            buses: res.data
+                        });
+                        console.log(this.state.buses[0]["busname"]);
+                    }
                 }
             })
         }
     }
 
+    selected(e, index) {
+        e.preventDefault()
+        console.log(this.state.buses[index]);
+        alert("Confirm?");
+
+        const booking = {
+            source: this.state.source,
+            destination: this.state.destination,
+            date: this.state.date,
+            busname: this.state.buses[index]["busname"],
+            time: this.state.buses[index]["time"]
+        }
+
+        addbooking(booking).then(res => {
+            if (res.status === 200) {
+                if (res.data["message"].includes("successfully")) {
+                    this.props.history.push('/viewbookings');
+                } else {
+                    alert(res.data["message"]);
+                }
+            }
+        })
+    }
+
     render() {
-        return (
-            <div className='container maint-cnt' style={{ marginTop: "10%" }}>
+        if (this.state.buses !== null) {
+            return (
+                <div className='container maint-cnt' style={{ marginTop: "10%" }}>
                 <h2 style={{ textAlign: "center", marginTop: "2%", fontSize: "35px", fontWeight: "bold" }}>Book your Ticket!</h2>
                 <div className="row justify-content-around">
                     <div className='col-5 form-container '>
@@ -121,7 +149,6 @@ class BusBooking extends Component {
                                     {/* <input className="form-control" type="date" name="date" value={this.state.date} required onChange={(e) => {this.handleDateChange(e)}} /> */}
                                     <DatePicker className="custom-select" name="date" value={this.state.date} onChange={this.handleDateChange} selected={this.state.date} minDate={moment().toDate()} />
                                 </div>
-                                <p style={{color: "red", fontSize: "10px"}}> {this.state.busError} </p>
                                 <div class="myform-button">
                                     <button type="submit" className="myform-btn">Next</button>
                                 </div>
@@ -131,7 +158,14 @@ class BusBooking extends Component {
                     {/* <div className='col-2'></div> */}
                     <div className='col-6 form-container' style={{height: "370px", overflowY: "scroll"}}>
                         <h2 style={{ textAlign: "center" }}>Step 2</h2>
-                        <div className="btn" style={{ textAlign: "left", width: "30%" }}>
+                        {Object.keys(this.state.buses).map((bus, index) => (
+                            <div className="btn" style={{ textAlign: "left", width: "30%" }}>
+                                <h4>{this.state.buses[index]["busname"]}</h4>
+                                <p>Departure Time: {this.state.buses[index]["time"]}</p>
+                                <input type="button" value="Select" onClick={e => { this.selected(e, index)}} />
+                            </div>
+                        ))}
+                        {/* <div className="btn" style={{ textAlign: "left", width: "30%" }}>
                             <h4>Grey Hound</h4>
                             <p>Departure Time: 7 am</p>
                             <input type="button" value="Select" value1="1" onClick={e => { this.selected(e) }} />
@@ -170,7 +204,48 @@ class BusBooking extends Component {
                             <h4>Grey Hound</h4>
                             <p>Departure Time: 10 am</p>
                             <input type="button" value="Select" value1="6" onClick={e => { this.selected(e) }} />
+                        </div> */}
+                    </div>
+                </div>
+            </div>
+            )
+        }
+        return (
+            <div className='container maint-cnt' style={{ marginTop: "10%" }}>
+                <h2 style={{ textAlign: "center", marginTop: "2%", fontSize: "35px", fontWeight: "bold" }}>Book your Ticket!</h2>
+                <div className="row justify-content-around">
+                    <div className='col-5 form-container '>
+                        <div className="form-input">
+                            <h2 style={{ textAlign: "center" }}>Step 1</h2>
+                            <form onSubmit={(e) => { this.submitData(e) }}>
+                                <div class="form-group">
+                                    <label>Source</label>
+                                    <input className="form-control" type="text" name="source" value={this.state.source} required onChange={(e) => { this.handleSourceChange(e) }} />
+                                    <p style={{color: "red", fontSize: "10px"}}> {this.state.sourceError} </p>
+                                </div>
+                                <div class="form-group">
+                                    <label>Destination</label>
+                                    <input className="form-control" type="text" name="destination" value={this.state.destination} required onChange={(e) => { this.handleDestinationChange(e) }} />
+                                    <p style={{color: "red", fontSize: "10px"}}> {this.state.destError} </p>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date of Journey  </label>
+                                    {/* <input className="form-control" type="date" name="date" value={this.state.date} required onChange={(e) => {this.handleDateChange(e)}} /> */}
+                                    <DatePicker className="custom-select" name="date" value={this.state.date} onChange={this.handleDateChange} selected={this.state.date} minDate={moment().toDate()} />
+                                </div>
+                                <div class="myform-button">
+                                    <button type="submit" className="myform-btn">Next</button>
+                                </div>
+                            </form>
                         </div>
+                    </div>
+                    {/* <div className='col-2'></div> */}
+                    <div className='col-6 form-container' style={{height: "370px", overflowY: "scroll"}}>
+                        <h2 style={{ textAlign: "center" }}>Step 2</h2>
+                        <br />
+                        <h5 style={{ textAlign: "center"}}>
+                            {this.state.busError}
+                        </h5>
                     </div>
                 </div>
             </div>

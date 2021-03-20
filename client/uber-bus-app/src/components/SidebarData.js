@@ -14,17 +14,17 @@ export const SidebarData = [
     path: '/signup',
     icon: <AiIcons.AiOutlineUserAdd />,
     cName: 'nav-text'
-  },
-  {
-    title: 'New Booking',
-    path: '/booking',
-    icon: <FaIcons.FaBus />,
-    cName: 'nav-text'
-  },
-  {
-    title: 'View Bookings',
-    path: '/viewbookings',
-    icon: <AiIcons.AiFillDatabase />,
-    cName: 'nav-text'
   }
+  // {
+  //   title: 'New Booking',
+  //   path: '/booking',
+  //   icon: <FaIcons.FaBus />,
+  //   cName: 'nav-text'
+  // },
+  // {
+  //   title: 'View Bookings',
+  //   path: '/viewbookings',
+  //   icon: <AiIcons.AiFillDatabase />,
+  //   cName: 'nav-text'
+  // }
 ];

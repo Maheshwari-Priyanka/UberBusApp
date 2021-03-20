@@ -6,6 +6,7 @@ import Header from './components/Header';
 import BusBooking from './components/AppPages/BusBooking';
 import Welcome from './components/Welcome';
 import ViewBookings from './components/AppPages/ViewBookings';
+import SignOut from './components/SignInSignUp/SignOut';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/signup" render={props => <SignUp {...props} />} />
           <Route path="/booking" render={props => <BusBooking {...props} />} />
           <Route path="/viewbookings" render={props => <ViewBookings {...props} />} />
+          <Route path="/signout" render={props => <SignOut {...props} />} />
         </Switch>
       </Router>
     </div>

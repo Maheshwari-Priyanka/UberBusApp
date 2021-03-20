@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './main.css'
-import signin from './UserFunctions';
+import { signin } from './UserFunctions';
 
 function validate(email, password) {
     let errors = []
@@ -39,7 +39,11 @@ class SignIn extends Component {
         this.submitData = this.submitData.bind(this)
     }
 
-    // let [userData, setUserData] = useState({})
+    componentDidMount() {
+        if (localStorage.getItem('userID') !== null) {
+            this.props.history.push('/booking')
+        }
+    }
 
     goToSignUp = e => {
         e.preventDefault()
@@ -80,24 +84,26 @@ class SignIn extends Component {
             }
 
             signin(user).then(res => {
-                let msg = res["message"];
-                if (msg.includes("not found")) {
-                    this.setState({
-                        emailError: res.message,
-                        passwordError: ''
-                    });
-                } else if (msg.includes("Incorrect email ID")) {
-                    this.setState({
-                        emailError: res.message,
-                        passwordError: ''
-                    });
-                } else if (msg.includes("Incorrect password")) {
-                    this.setState({
-                        emailError: '',
-                        passwordError: res.message
-                    });
+                if (res.status === 200) {
+                    let msg = res.data["message"];
+                    if (msg.includes("not found") || msg.includes("Incorrect email ID")) {
+                        this.setState({
+                            emailError: msg,
+                            passwordError: ''
+                        });
+                    } else if (msg.includes("Incorrect password")) {
+                        this.setState({
+                            emailError: '',
+                            passwordError: msg
+                        });
+                    } else {
+                        localStorage.setItem('userID', res.data["userID"])
+                        localStorage.setItem('firstname', res.data["firstname"])
+                        console.log(localStorage.getItem('userID'));
+                        this.props.history.push('/booking');
+                    }
                 } else {
-                    this.props.history.push('/booking');
+                    alert("Server Error!");
                 }
             });
         }
