@@ -3,7 +3,7 @@ const url = "http://localhost:5000/busapp/";
 
 export const getbuses = booking => {
     return axios
-    .get(url+"getbuses", {
+    .post(url+"getbuses", {
         source: booking.source,
         destination: booking.destination,
         date: booking.date

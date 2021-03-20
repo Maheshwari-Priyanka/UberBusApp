@@ -93,7 +93,7 @@ class BusBooking extends Component {
                         this.setState({
                             buses: res.data
                         });
-                        console.log(this.state.buses[0]["busname"]);
+                        //console.log(this.state.buses[0]["busname"]);
                     }
                 }
             })

@@ -172,9 +172,12 @@ def signup():
 
 
 # endpoint to show all buses 
-@app.route("/busapp/getbuses", methods=["GET"])
+@app.route("/busapp/getbuses", methods=["GET","POST"])
 def get_buses():
-    query = buses.find()
+    source = request.json['source']
+    destination = request.json['destination']
+
+    query = buses.find({'source': source, 'destination': destination})
     result = {}
     if query == None:
         return jsonify({"message": "No Buses found"}), 200
