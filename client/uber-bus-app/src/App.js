@@ -5,6 +5,7 @@ import SignUp from './components/SignInSignUp/SignUp';
 import Header from './components/Header';
 import BusBooking from './components/AppPages/BusBooking';
 import Welcome from './components/Welcome';
+import Error from './components/Error';
 import ViewBookings from './components/AppPages/ViewBookings';
 import SignOut from './components/SignInSignUp/SignOut';
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/booking" render={props => <BusBooking {...props} />} />
           <Route path="/viewbookings" render={props => <ViewBookings {...props} />} />
           <Route path="/signout" render={props => <SignOut {...props} />} />
+          <Route path="/" render={props => <Error {...props} />} />
         </Switch>
       </Router>
     </div>
