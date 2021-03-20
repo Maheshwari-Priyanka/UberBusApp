@@ -96,14 +96,17 @@ def ssm():
 
 
 # endpoint to signin user 
-@app.route("/busapp/signin", methods=["GET"])
+@app.route("/busapp/signin", methods=["GET","POST"])
 def signin():
 
-    # email = request.json['email']
-    # password = request.json['password']
+    print("r: ", request)
+    email = request.json['email']
+    password = request.json['password']
 
-    email = "vanga@email.com"
-    password = "passwordTest"
+    print("Email: ", email)
+
+    # email = "vanga@email.com"
+    # password = "passwordTest"
 
     queryObject = {"email":email}
     query = users.find_one(queryObject)
@@ -112,36 +115,43 @@ def signin():
     
     if query == None:
         result = {"message": "Email not found"}
-        return jsonify(result), 400
+        return jsonify(result), 200
+        # changed 400 to 200
     else:
-        query.pop('_id')
+        # query.pop('_id')
         if query['email'] != email:
-            return jsonify({"message": "Incorrect email ID"}), 400
+            return jsonify({"message": "Incorrect email ID"}), 200
+            # changed 400 to 200
         elif query['password'] != password:
-            return jsonify({"message": "Incorrect password"}), 400
+            return jsonify({"message": "Incorrect password"}), 200
+            # changed 400 to 200
         else:
-            return jsonify({"message": "Successful login"}), 200
+            # return jsonify({"message": "Successful login"}), 200
+            return jsonify({"message": "Successful login",
+                            "firstname": query['firstname'],
+                            "userID": query['_id']}), 200
 
 
 # endpoint to add new user
 @app.route("/busapp/signup", methods=["GET","POST"])
 def signup():
-    # firstname = request.json['firstname']
-    # lastname = request.json['lastname']
-    # email = request.json['email']
-    # password = request.json['password']
+    firstname = request.json['firstname']
+    lastname = request.json['lastname']
+    email = request.json['email']
+    password = request.json['password']
 
-    firstname = "priyanka"
-    lastname = "maheshwari"
-    email = "priyanka@email.com"
-    password = "passwordTest1"
+    # firstname = "priyanka"
+    # lastname = "maheshwari"
+    # email = "priyanka@email.com"
+    # password = "passwordTest1"
 
     result = {}
     queryObject = {"email":email}
     user = users.find_one(queryObject)
 
     if user != None:
-        return jsonify({"message": "User already exists. Signup with different email address"}), 400
+        return jsonify({"message": "User already exists. Signup with different email address"}), 200
+        # changed 400 to 200
     else:
         uber_user = {'_id':str(ObjectId()),
                 'firstname':firstname, 
@@ -167,7 +177,7 @@ def get_buses():
     query = buses.find()
     result = {}
     if query == None:
-        return jsonify({"message": "No Buses found"}), 400
+        return jsonify({"message": "No Buses found"}), 200
     output = {} 
     i = 0
     for x in query: 
@@ -180,19 +190,19 @@ def get_buses():
 # endpoint to add new booking
 @app.route("/busapp/addbooking", methods=["GET","POST"])
 def addbooking():
-    # source = request.json['source']
-    # destination = request.json['destination']
-    # date = request.json['date']
-    # bus = request.json['bus']
-    # time = request.json['time']
-    # userID = request.json['userID']
+    source = request.json['source']
+    destination = request.json['destination']
+    date = request.json['date']
+    bus = request.json['bus']
+    time = request.json['time']
+    userID = request.json['userID']
 
-    source = "Boston"
-    destination = "new york"
-    date = "date"
-    bus = "bus1"
-    time = "time"
-    userID = "1"
+    # source = "Boston"
+    # destination = "new york"
+    # date = "date"
+    # bus = "bus1"
+    # time = "time"
+    # userID = "1"
 
     result = {}
     
@@ -211,18 +221,18 @@ def addbooking():
     if query:
         return jsonify({"message": "Booking added successfully"}), 200
     else:
-        return jsonify({"message": "Error adding new booking"+ query}), 400
+        return jsonify({"message": "Error adding new booking"+ query}), 200
 
 # endpoint to show all bookings 
-@app.route("/busapp/getbookings", methods=["GET"])
+@app.route("/busapp/getbookings", methods=["GET","POST"])
 def get_bookings():
-    # userID = request.jsonify['userID']
-    userID = '1'
+    userID = request.json['userID']
+    # userID = '1'
 
     query = bookings.find({'userID': userID})
     result = {}
     if query == None:
-        return jsonify({"message": "No bookings found"}), 400
+        return jsonify({"message": "No bookings found"}), 200
     output = {} 
     i = 0
     for x in query: 

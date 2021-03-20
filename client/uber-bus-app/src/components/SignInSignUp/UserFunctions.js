@@ -10,20 +10,17 @@ export const signup = newUser => {
         password: newUser.password
     }).then(res => {
         console.log(res);
-        res = {"message": "Success"};
         return res;
-        // return res.data;
     }).catch(res => {
         console.log(res);
-        res = {"message": "Server Error"};
-        return res;
-        // return res.data;
+        let errorMessage = {"message": "error"}
+        return errorMessage;
     })
 }
 
 export const signin = user => {
     return axios
-    .get(url + "signin", {
+    .post(url + "signin", {
         email: user.email,
         password: user.password
     }).then(res => {
@@ -31,6 +28,7 @@ export const signin = user => {
         return res;
     }).catch(res => {
         console.log(res);
-        return res;
+        let errorMessage = {"message": "error"}
+        return errorMessage;
     })
 }

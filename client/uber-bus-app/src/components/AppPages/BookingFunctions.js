@@ -16,14 +16,31 @@ export const getbuses = booking => {
     })
 }
 
-export const getbookings = booking => {
+export const addbooking = booking => {
     return axios
-    .get(url+"getbookings", {
-        userID: booking.id
+    .post(url+"addbooking", {
+        source: booking.source,
+        destination: booking.destination,
+        date: booking.date,
+        bus: booking.busname,
+        time: booking.time,
+        userID: localStorage.getItem('userID')
     }).then(res => {
         console.log(res);
         return res;
     }).catch(res => {
-        console.log(res)
+        console.log(res);
+    })
+}
+
+export const getbookings = booking => {
+    return axios
+    .post(url+"getbookings", {
+        userID: localStorage.getItem('userID')
+    }).then(res => {
+        console.log(res);
+        return res;
+    }).catch(res => {
+        console.log(res);
     })
 }
