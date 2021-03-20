@@ -1,0 +1,8 @@
+#cloud-config
+
+write_files:
+- path: /etc/environment
+  content: |
+    FLASK_IP_ADDRESS=${flask_ip_address}
+    
+  append: true

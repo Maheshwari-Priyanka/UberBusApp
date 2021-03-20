@@ -74,12 +74,33 @@ resource "aws_eip" "uberapp_eip" {
   vpc = true
 }
 
-
 resource "aws_instance" "uberapp" {
   ami                    = "ami-042e8287309f5df03"
   instance_type          = "t2.micro"
   key_name               = "${aws_key_pair.one_click.key_name}"
   vpc_security_group_ids = ["${aws_security_group.allow_react_and_ssh.id}"]
+  user_data              = "${data.template_file.script.rendered}"
+
+}
+
+# User_data
+data "template_file" "script" {
+  template = "${file("${path.module}/cloud-config.yml")}"
+
+  vars = {
+    flask_ip_address = "${aws_eip.uberapp_eip.public_ip}"
+  }
+}
+
+data "template_cloudinit_config" "config" {
+  gzip          = true
+  base64_encode = true
+
+  part {
+    filename     = "init.cfg"
+    content_type = "text/cloud-config"
+    content      = "${data.template_file.script.rendered}"
+  }
 
 }
 
@@ -111,7 +132,6 @@ resource "aws_security_group" "allow_react_and_ssh" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
 
 resource "aws_eip_association" "uber_eip_assoc" {
   instance_id   = "${aws_instance.uberapp.id}"
