@@ -14,14 +14,14 @@ git clone https://github.com/Maheshwari-Priyanka/UberBusApp.git
 
 2. React
 
-    ```bash
-    cd client/uber-bus-app
-    ```
-    
-    ```bash
-    npm install
-    ```
+```bash
+cd client/uber-bus-app
+```
 
-    ```bash
-    npm build
-    ```
+```bash
+npm install
+```
+
+```bash
+npm build
+```
