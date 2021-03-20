@@ -120,7 +120,27 @@ resource "aws_instance" "uberapp" {
       "sudo systemctl enable uberbe",
       "export FLASK_IP_ADDRESS=${aws_eip.uberapp_eip.public_ip}",
       "echo $FLASK_IP_ADDRESS",
-      
+      "echo '**********NGINX and node**********'",
+      "cd",
+      "sudo apt-get update",
+      "sudo apt remove -y libcurl4",
+      "sudo apt-get install -y libcurl4 curl",
+      "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -",
+      "sudo apt-get install -y nodejs",
+      "sudo apt-get install -y build-essential",
+      "sudo apt-get install -y ruby",
+      "sudo apt-get install nginx -y",
+      "cd UberBusApp/client/uber-bus-app",
+      "touch .env",
+      "sudo echo REACT_APP_FLASK_IP_ADDRESS=${aws_eip.uberapp_eip.public_ip} >> .env",
+      "sudo npm install",
+      "sudo npm run build",
+      "cd ~",
+      "sudo rm /etc/nginx/sites-enabled/default",
+      "sudo mv UberBusApp/client/uber-bus-app/uber.nginx /etc/nginx/sites-available/",
+      "sudo ln -s /etc/nginx/sites-available/uber.nginx /etc/nginx/sites-enabled/uber.nginx",
+      "sudo systemctl start nginx",
+      "sudo systemctl reload nginx"
     ]
   }
 
