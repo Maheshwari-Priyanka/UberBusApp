@@ -81,6 +81,49 @@ resource "aws_instance" "uberapp" {
   vpc_security_group_ids = ["${aws_security_group.allow_react_and_ssh.id}"]
   user_data              = "${data.template_file.script.rendered}"
 
+  connection {
+    host        = "${aws_instance.uberapp.public_dns}"
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = "${file("${var.path_to_private_key}")}"
+  }
+  provisioner "file" {
+    source = "${file("${var.path_to_UberBusApp}")}"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt update",
+      "sudo apt install software-properties-common",
+      "sudo add-apt-repository ppa:deadsnakes/ppa -y",
+      "sudo apt install python3.9 -y",
+      "python3 --version",
+      "sudo apt install -y python3-pip",
+      "sudo apt-get install tmux -y",
+      "cd UberBusApp/uberbe",
+      "sudo apt install python3-venv -y",
+      "python3.8 -m venv uberenv",
+      "source uberenv/bin/activate",
+      "pip3 install wheel",
+      "pip3 install flask",
+      "pip3 install gunicorn",
+      "pip3 install python-dotenv",
+      "pip3 install flask-cors",
+      "pip3 install flask-api",
+      "pip3 install pymongo",
+      "pip3 install requests",
+      "pip3 install python-dateutil", "pip3 install pytz", "pip3 install dnspython",
+      "sudo mv uberbe.service /etc/systemd/system/uberbe.service",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl start uberbe",
+      "sudo systemctl enable uberbe",
+      "export FLASK_IP_ADDRESS=${aws_eip.uberapp_eip.public_ip}",
+      "echo $FLASK_IP_ADDRESS",
+      
+    ]
+  }
+
 }
 
 # User_data
