@@ -87,10 +87,10 @@ resource "aws_instance" "uberapp" {
     user        = "ubuntu"
     private_key = "${file("${var.path_to_private_key}")}"
   }
-  provisioner "file" {
-    source = "${var.path_to_UberBusApp}"
-    destination = "/home/ubuntu"
-  }
+  # provisioner "file" {
+  #   source = "${var.path_to_UberBusApp}"
+  #   destination = "/home/ubuntu"
+  # }
 
   provisioner "remote-exec" {
     inline = [
@@ -98,9 +98,10 @@ resource "aws_instance" "uberapp" {
       "sudo apt install software-properties-common",
       "sudo add-apt-repository ppa:deadsnakes/ppa -y",
       "sudo apt install python3.9 -y",
-      "python3 --version",
       "sudo apt install -y python3-pip",
       "sudo apt-get install tmux -y",
+      "sudo apt install git -y",
+      "sudo git clone https://github.com/Maheshwari-Priyanka/UberBusApp.git",
       "cd UberBusApp/uberbe",
       "sudo apt install python3-venv -y",
       "python3.8 -m venv uberenv",
@@ -118,8 +119,6 @@ resource "aws_instance" "uberapp" {
       "sudo systemctl daemon-reload",
       "sudo systemctl start uberbe",
       "sudo systemctl enable uberbe",
-      "export FLASK_IP_ADDRESS=${aws_eip.uberapp_eip.public_ip}",
-      "echo $FLASK_IP_ADDRESS",
       "echo '**********NGINX and node**********'",
       "cd",
       "sudo apt-get update",
