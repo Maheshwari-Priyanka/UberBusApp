@@ -79,7 +79,7 @@ resource "aws_instance" "uberapp" {
   instance_type          = "t2.micro"
   key_name               = "${aws_key_pair.one_click.key_name}"
   vpc_security_group_ids = ["${aws_security_group.allow_react_and_ssh.id}"]
-  user_data              = "${data.template_file.script.rendered}"
+  # user_data              = "${data.template_file.script.rendered}"
 
   connection {
     host        = "${aws_instance.uberapp.public_dns}"
@@ -101,11 +101,10 @@ resource "aws_instance" "uberapp" {
       "sudo apt install -y python3-pip",
       "sudo apt-get install tmux -y",
       "sudo apt install git -y",
-      "sudo git clone https://github.com/Maheshwari-Priyanka/UberBusApp.git",
+      "git clone https://github.com/Maheshwari-Priyanka/UberBusApp.git",
       "cd UberBusApp/uberbe",
       "sudo apt install python3-venv -y",
-      "python3.8 -m venv uberenv",
-      "source uberenv/bin/activate",
+      
       "pip3 install wheel",
       "pip3 install flask",
       "pip3 install gunicorn",
@@ -130,8 +129,7 @@ resource "aws_instance" "uberapp" {
       "sudo apt-get install -y ruby",
       "sudo apt-get install nginx -y",
       "cd UberBusApp/client/uber-bus-app",
-      "touch .env",
-      "sudo echo REACT_APP_FLASK_IP_ADDRESS=${aws_eip.uberapp_eip.public_ip} >> .env",
+      "sudo echo 'REACT_APP_FLASK_IP_ADDRESS=${aws_eip.uberapp_eip.public_ip}' > .env",
       "sudo npm install",
       "sudo npm run build",
       "cd ~",
