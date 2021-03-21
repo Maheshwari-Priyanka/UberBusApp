@@ -64,50 +64,58 @@ class BusBooking extends Component {
         // alert(this.state.source + " " + this.state.destination + " " + this.state.date);
         const source = this.state.source;
         const destination = this.state.destination;
-
-        const errors = validate(source, destination);
-
-        if (errors[0].length > 0 || errors[1].length > 0) {
+        
+        if (source === destination) {
             this.setState({
-                sourceError: errors[0],
-                destError: errors[1]
+                sourceError: "Source and Destination cannot be same",
+                destError: ""
             });
             e.preventDefault();
         } else {
-            e.preventDefault();
-            const booking = {
-                source: this.state.source,
-                destination: this.state.destination,
-                date: this.state.date
-            }
+            const errors = validate(source, destination);
 
-            getbuses(booking).then(res => {
-                if (res.status === 200) {
-                    if (res.data["message"] === "No Buses found") {
-                        this.setState({
-                            sourceError: "",
-                            destError: "",
-                            busError: res.data["message"],
-                            buses: []
-                        });
-                    } else {
-                        let size = Object.keys(res.data).length
-                        console.log(size);
-                        if (size < 1) {
+            if (errors[0].length > 0 || errors[1].length > 0) {
+                this.setState({
+                    sourceError: errors[0],
+                    destError: errors[1]
+                });
+                e.preventDefault();
+            } else {
+                e.preventDefault();
+                const booking = {
+                    source: this.state.source,
+                    destination: this.state.destination,
+                    date: this.state.date
+                }
+
+                getbuses(booking).then(res => {
+                    if (res.status === 200) {
+                        if (res.data["message"] === "No Buses found") {
                             this.setState({
-                                buses: [],
-                                busError: 'No buses found'
+                                sourceError: "",
+                                destError: "",
+                                busError: res.data["message"],
+                                buses: []
                             });
                         } else {
-                            this.setState({
-                                buses: res.data,
-                                busError: ''
-                            });
+                            let size = Object.keys(res.data).length
+                            console.log(size);
+                            if (size < 1) {
+                                this.setState({
+                                    buses: [],
+                                    busError: 'No buses found'
+                                });
+                            } else {
+                                this.setState({
+                                    buses: res.data,
+                                    busError: ''
+                                });
+                            }
+                            //console.log(this.state.buses[0]["busname"]);
                         }
-                        //console.log(this.state.buses[0]["busname"]);
                     }
-                }
-            })
+                });
+            }
         }
     }
 
