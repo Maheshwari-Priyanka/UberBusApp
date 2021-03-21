@@ -145,27 +145,6 @@ resource "aws_instance" "uberapp" {
 
 }
 
-# User_data
-data "template_file" "script" {
-  template = "${file("${path.module}/cloud-config.yml")}"
-
-  vars = {
-    flask_ip_address = "${aws_eip.uberapp_eip.public_ip}"
-  }
-}
-
-data "template_cloudinit_config" "config" {
-  gzip          = true
-  base64_encode = true
-
-  part {
-    filename     = "init.cfg"
-    content_type = "text/cloud-config"
-    content      = "${data.template_file.script.rendered}"
-  }
-
-}
-
 
 resource "aws_security_group" "allow_react_and_ssh" {
   name = "allow_react_and_ssh"
