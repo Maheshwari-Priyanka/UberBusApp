@@ -2,7 +2,7 @@ provider "aws" {
   region = "us-east-1"
 }
 resource aws_key_pair "one_click" {
-  key_name   = "id_rsa"
+  key_name   = "${var.key-name}"
   public_key = "${file("${var.path_to_public_key}")}"
 }
 
