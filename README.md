@@ -26,6 +26,10 @@ npm install
 npm build
 ```
 
+```bash
+npm start
+```
+
 3. Python in local
 
 ```bash
