@@ -104,7 +104,7 @@ resource "aws_instance" "uberapp" {
       "git clone https://github.com/Maheshwari-Priyanka/UberBusApp.git",
       "cd UberBusApp/uberbe",
       "sudo apt install python3-venv -y",
-
+      
       "pip3 install wheel",
       "pip3 install flask",
       "pip3 install gunicorn",
@@ -113,7 +113,7 @@ resource "aws_instance" "uberapp" {
       "pip3 install flask-api",
       "pip3 install pymongo",
       "pip3 install requests",
-      "pip3 install python-dateutil", "pip3 install pytz", "pip3 install dnspython", "pip3 install cryptography",
+      "pip3 install python-dateutil", "pip3 install pytz", "pip3 install dnspython",
       "sudo mv uberbe.service /etc/systemd/system/uberbe.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start uberbe",

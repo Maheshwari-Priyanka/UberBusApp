@@ -13,7 +13,6 @@ import json
 import random
 import string
 import pathlib
-from cryptography.fernet import Fernet
 import io
 from uuid import UUID
 from bson.objectid import ObjectId
@@ -24,8 +23,7 @@ from pymongo import MongoClient
 
 username = urllib.parse.quote_plus('admin')
 password = urllib.parse.quote_plus('Csye@7220')
-key = Fernet.generate_key() #this is your "password"
-cipher_suite = Fernet(key)
+
 # mongo
 #mongo_client = MongoClient('mongodb://localhost:27017/')
 mongo_client = MongoClient("mongodb+srv://%s:%s@uberapp.hvf8i.mongodb.net/uber?retryWrites=true&w=majority" % (username, password))
@@ -103,9 +101,7 @@ def signin():
 
     print("r: ", request)
     email = request.json['email']
-    password = request.json['password'].encode("utf-8")
-
-    # hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+    password = request.json['password']
 
     print("Email: ", email)
 
@@ -116,21 +112,17 @@ def signin():
     query = users.find_one(queryObject)
     print("find user: ", query)
     result = {}
-    print(password)
-    print('---------------------------')
     
     if query == None:
         result = {"message": "Email not found"}
         return jsonify(result), 200
         # changed 400 to 200
     else:
-        check = cipher_suite.decrypt(query['password'])
-        print(check)
         # query.pop('_id')
         if query['email'] != email:
             return jsonify({"message": "Incorrect email ID"}), 200
             # changed 400 to 200
-        elif check != password:
+        elif query['password'] != password:
             return jsonify({"message": "Incorrect password"}), 200
             # changed 400 to 200
         else:
@@ -146,8 +138,8 @@ def signup():
     firstname = request.json['firstname']
     lastname = request.json['lastname']
     email = request.json['email']
-    # password = bcrypt.hashpw(request.json['password'].encode("utf-8"), bcrypt.gensalt())
-    password = cipher_suite.encrypt(request.json['password'].encode("utf-8"))
+    password = request.json['password']
+
     # firstname = "priyanka"
     # lastname = "maheshwari"
     # email = "priyanka@email.com"
