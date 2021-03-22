@@ -13,6 +13,7 @@ import json
 import random
 import string
 import pathlib
+import hashlib, binascii
 import io
 from uuid import UUID
 from bson.objectid import ObjectId
@@ -119,10 +120,17 @@ def signin():
         # changed 400 to 200
     else:
         # query.pop('_id')
+        salt = query['password'][:64]
+        stored_password = query['password'][64:]
+        pwdhash = hashlib.pbkdf2_hmac('sha512', 
+                                  password.encode('utf-8'), 
+                                  salt.encode('ascii'), 
+                                  100000)
+        pwdhash = binascii.hexlify(pwdhash).decode('ascii')
         if query['email'] != email:
             return jsonify({"message": "Incorrect email ID"}), 200
             # changed 400 to 200
-        elif query['password'] != password:
+        elif pwdhash != stored_password:
             return jsonify({"message": "Incorrect password"}), 200
             # changed 400 to 200
         else:
@@ -139,6 +147,13 @@ def signup():
     lastname = request.json['lastname']
     email = request.json['email']
     password = request.json['password']
+
+    salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
+    pwdhash = hashlib.pbkdf2_hmac('sha512', password.encode('utf-8'), 
+                                salt, 100000)
+    pwdhash = binascii.hexlify(pwdhash)
+    print("Password: ")
+    password = (salt + pwdhash).decode('ascii')
 
     # firstname = "priyanka"
     # lastname = "maheshwari"
